@@ -13,12 +13,20 @@ const router = createRouter({
         {
           path: '',
           name: 'Home',
-          component: () => import('@/views/Home/index.vue')
+          component: () => import('@/views/Home/index.vue'),
+          meta: {
+            title: '首页',
+            expand: false,
+          }
         },
         {
           path: 'user',
           name: 'User',
-          component: () => import('@/views/User/index.vue')
+          component: () => import('@/views/User/index.vue'),
+          meta: {
+            title: '用户信息',
+            expand: false,
+          }
         },
         {
           path: 'booklist',
@@ -27,7 +35,11 @@ const router = createRouter({
         {
           path: 'booklist/:page',
           name: 'BookList',
-          component: () => import('@/views/BookList/index.vue')
+          component: () => import('@/views/BookList/index.vue'),
+          meta: {
+            title: '我的书单',
+            expand: true,
+          }
         }
       ]
     },

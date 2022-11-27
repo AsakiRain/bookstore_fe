@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <main class="main" :style="{width: $route.meta.expand ? '100%' : '1200px'}">
     <div class="side-bar" id="side-bar">
       <div class="side-title">我的书单</div>
       <a-avatar id="user-avatar" :size="64">
@@ -21,7 +21,9 @@
     </div>
     <div class="content">
       <div class="content-title">我的书单</div>
-      <div id="list-search-wrapper">
+      <div id="tool-bar">
+        <a-button type="primary" status="success">添加图书</a-button>
+        <a-button type="primary" status="danger">删除选中图书</a-button>
         <a-input
           id="list-search"
           v-model="keyword"
@@ -34,26 +36,59 @@
         <a-button type="primary">搜索书单</a-button>
         <a-button type="outline">清空条件</a-button>
       </div>
+      <div class="pag-wrapper">
+        <a-pagination :total="total" v-model:current="page" :page-size="20"/>
+      </div>
       <a-spin :loading="loading" id="list-wrapper">
-        <a-grid :cols="4" :col-gap="12" :row-gap="16" id="booklist">
+        <a-grid :cols="2" :col-gap="16" :row-gap="16" id="booklist">
           <a-grid-item v-for="book in current" :key="book.isbn">
-            <a-card class="book" :body-style="{padding: 0}">
+            <a-card class="book-card" :body-style="{padding: 0}">
               <div class="card-content">
                 <div class="img-wrapper">
-                  <img class="book-image" :src="'/api/proxy?url='.concat(book.cover)"/>
+                  <img :alt="book.title" class="book-image" :src="'/api/proxy?url='.concat(book.cover)"/>
                 </div>
-                <div class="info-wrapper">
-                  <div class="book-title info-item">{{ book.title }}</div>
-                  <div class="info-item book-author">{{ book.author }}</div>
-                  <div class="info-item book-translator" v-if="book.translator">{{ book.translator }}（译者）</div>
-                  <div class="info-item book-publisher">{{ book.publisher }}</div>
+                <div class="text-wrapper">
+                  <div class="info-wrapper">
+                    <div class="basic-wrapper">
+                      <div class="info-item book-title">{{ book.title }}</div>
+                      <div class="info-item book-isbn">ISBN：{{ book.isbn }}</div>
+                      <div class="info-item">
+                        <span class="book-author">{{ book.author }}</span>
+                        <span class="book-translator" v-if="book.translator"> / {{ book.translator }}[译]</span>
+                        <span class="book-publisher"> / {{ book.publisher }}</span>
+                      </div>
+                    </div>
+                    <a-button-group type="primary" class="action-wrapper">
+                      <a-button type="primary" status="normal">
+                        <template #icon>
+                          <icon-info-circle/>
+                        </template>
+                        详情
+                      </a-button>
+                      <a-button type="primary" :status="book.checked ? 'warning' : 'success'"
+                                @click="book.checked = !book.checked">
+                        <template #icon>
+                          <icon-check-circle-fill v-if="book.checked"/>
+                          <icon-check-circle v-else/>
+                        </template>
+                        选择
+                      </a-button>
+                      <a-button type="primary" status="danger">
+                        <template #icon>
+                          <icon-delete/>
+                        </template>
+                        删除
+                      </a-button>
+                    </a-button-group>
+                  </div>
+                  <div class="intro-wrapper">{{ book.intro }}</div>
                 </div>
               </div>
             </a-card>
           </a-grid-item>
         </a-grid>
       </a-spin>
-      <div id="pag-wrapper">
+      <div class="pag-wrapper">
         <a-pagination :total="total" v-model:current="page" :page-size="20"/>
       </div>
     </div>
@@ -62,10 +97,16 @@
 <script lang="ts" setup>
   import useUserStore from '@/store/user';
   import { useRoute, useRouter } from 'vue-router';
-  import { computed, onMounted, ref, watch } from 'vue';
+  import { ref, watch } from 'vue';
   import useSwitch from '@/utils/useSwitch';
   import type { Book } from '@/models/book';
-  import { IconSearch } from '@arco-design/web-vue/es/icon';
+  import {
+    IconSearch,
+    IconDelete,
+    IconCheckCircle,
+    IconCheckCircleFill,
+    IconInfoCircle
+  } from '@arco-design/web-vue/es/icon';
   import { Message } from '@arco-design/web-vue';
 
   const router = useRouter();
@@ -94,7 +135,12 @@
         });
         const payload = await resp.json();
         total.value = payload.data.book_count;
-        current.value = payload.data.book_list;
+        current.value = payload.data.book_list.map((book: Partial<Book>) => {
+          return {
+            ...book,
+            checked: false
+          };
+        });
       } catch (err: any) {
         Message.error(err.message);
       } finally {
@@ -105,9 +151,10 @@
 
 </script>
 <style lang="css" scoped>
-  #side-bar{
+  #side-bar {
     align-items: center;
   }
+
   #user-avatar {
     margin: 16px 0;
   }
@@ -129,46 +176,88 @@
     align-items: center;
   }
 
-  #list-search-wrapper {
+  #tool-bar {
     display: flex;
     column-gap: 8px;
-    margin-top: 24px;
-    margin-bottom: 48px;
+    margin: 24px 0;
     align-items: center;
-    width: 600px;
+  }
+
+  #list-search {
+    min-width: 300px;
+  }
+
+
+  #list-wrapper, .pag-wrapper {
+    margin-bottom: 24px;
+  }
+
+  #booklist {
+    margin: 0 24px;
+  }
+
+  .card-content {
+    display: flex;
+    height: 240px;
   }
 
   .img-wrapper {
+    width: 180px;
     background-color: #EBF1F5;
-    height: 156px;
-    padding: 8px 0;
-    text-align: center;
     font-size: 0;
     display: flex;
     justify-content: center;
-  }
-
-  .info-wrapper {
-    background-color: #F6F9FB;
-    text-align: center;
-    height: 108px;
     overflow: hidden;
-    padding: 8px 16px;
+    flex-shrink: 0;
   }
 
   .book-image {
     border-radius: 4px;
   }
 
-  #booklist {
-    width: 900px;
+  .text-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #F6F9FB;
+    padding: 12px;
+    row-gap: 4px;
   }
 
-  #list-wrapper {
-    margin-bottom: 24px;
+  .info-wrapper {
+    display: flex;
+    align-items: start;
+    margin-bottom: 4px;
   }
 
-  #pag-wrapper {
-    margin-bottom: 24px;
+  .action-wrapper {
+    margin-top: 8px;
   }
+
+  .basic-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+
+  .book-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .book-isbn {
+    color: #AAAAAA;
+    margin-bottom: 4px;
+  }
+
+  .book-author, .book-translator, .book-publisher {
+    font-size: 16px;
+  }
+
+  .intro-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
 </style>

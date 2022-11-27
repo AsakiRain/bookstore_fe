@@ -13,4 +13,5 @@ export interface Book {
   title: string;
   translator: string;
   url: string;
+  checked: boolean;
 }

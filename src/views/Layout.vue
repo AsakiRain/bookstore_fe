@@ -1,6 +1,6 @@
 <template>
   <header id="header">
-    <div id="header-content">
+    <div id="header-content" :style="{width: $route.meta.expand ? '100%' : '1200px'}">
       <div id="main-title">
         <router-link to="/" class="nav-link">BOOKSTORE</router-link>
       </div>
@@ -25,12 +25,10 @@
       </div>
     </div>
   </header>
-  <!--  <div id="wrapper">-->
   <router-view></router-view>
   <footer id="footer">
     AsakiRain | 2022
   </footer>
-  <!--  </div>-->
 </template>
 
 <script lang="ts" setup>
@@ -91,9 +89,9 @@
   }
 
   #header-content {
+    margin: 0 24px;
     height: 64px;
     display: flex;
-    width: 100%;
     align-items: center;
   }
 
@@ -145,10 +143,9 @@
     cursor: pointer;
   }
 
-  .main{
+  .main {
     flex-grow: 1;
     align-self: center;
-    width: 100%;
     display: flex;
     margin-top: 64px;
   }
@@ -164,6 +161,7 @@
     position: sticky;
     top: 80px;
     z-index: 1;
+    flex-shrink: 0;
   }
 
   .side-title {
@@ -174,6 +172,7 @@
     padding: 16px;
     border-bottom: 1px solid #E0E0E0;
   }
+
   .content {
     flex-grow: 1;
     background-color: #FFFFFF;

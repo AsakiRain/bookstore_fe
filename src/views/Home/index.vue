@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <main class="main" :style="{width: $route.meta.expand ? '100%' : '1200px'}">
     <div class="side-bar">
       <div class="side-title">
         图书分类

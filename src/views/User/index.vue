@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <main class="main" :style="{width: $route.meta.expand ? '100%' : '1200px'}">
     <div class="side-bar" id="side-bar">
       <div class="side-title">用户信息</div>
       <a-avatar id="user-avatar" :size="64">
@@ -210,9 +210,10 @@
   };
 </script>
 <style lang="css" scoped>
-  #side-bar{
+  #side-bar {
     align-items: center;
   }
+
   #user-avatar {
     margin: 16px 0;
   }
