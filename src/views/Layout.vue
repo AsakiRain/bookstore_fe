@@ -15,11 +15,11 @@
                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"/>
         </a-avatar>
         <a-dropdown>
-          <div id="user-title" class="nav-link btn-link">USERNAME</div>
+          <div id="user-title" class="nav-link btn-link">{{ userStore.nickname }}</div>
           <template #content>
             <a-doption @click="$router.push('/user')">用户信息</a-doption>
             <a-doption @click="$router.push('/manager')">管理商店</a-doption>
-            <a-doption @click="$router.push('/logout')">退出登录</a-doption>
+            <a-doption @click="logout">退出登录</a-doption>
           </template>
         </a-dropdown>
       </div>
@@ -32,9 +32,26 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive } from 'vue';
+  import { onMounted, reactive } from 'vue';
   import type { RouteLink } from '@/models/common';
+  import useUserStore from '@/store/user';
+  import { useRouter } from 'vue-router';
+  import { Message } from '@arco-design/web-vue';
 
+  const userStore = useUserStore();
+  const router = useRouter();
+
+  onMounted(async () => {
+    if (!await userStore.info()) {
+      await router.push('/login');
+    }
+  });
+
+  const logout = async () => {
+    await userStore.logout();
+    Message.info('已经退出登录');
+    await router.push('/login');
+  };
   const routeLinks = reactive<RouteLink[]>([
     {
       title: '首页',
@@ -64,7 +81,6 @@
     display: flex;
     justify-content: center;
     background-color: #FFFFFF;
-
   }
 
   #header-content {

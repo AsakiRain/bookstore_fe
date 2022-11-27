@@ -1,4 +1,4 @@
-export interface RouteLink{
-    path: string;
-    title: string;
+export interface RouteLink {
+  path: string;
+  title: string;
 }
