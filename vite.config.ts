@@ -4,16 +4,24 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080/bookstore4",
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [vue()],
   resolve: {
     alias: [
       {
         find: "@",
-        replacement: resolve(__dirname, "../src"),
+        replacement: resolve(__dirname, "src"),
       },
       {
         find: "assets",
-        replacement: resolve(__dirname, "../src/assets"),
+        replacement: resolve(__dirname, "src/assets"),
       },
       {
         find: "vue-i18n",
