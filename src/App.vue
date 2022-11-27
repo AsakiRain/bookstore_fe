@@ -5,6 +5,7 @@
 <style>
 * {
   box-sizing: border-box;
+  font-family: Roboto, sans-serif;
 }
 body {
   margin: 0;
@@ -18,5 +19,7 @@ body {
   background-color: transparent;
   backdrop-filter: blur(6px);
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -65,7 +65,7 @@ const handleLogin = async () => {
     console.log(payload);
     if (payload.code === 20000) {
       Message.success("登录成功");
-      router.push("/home");
+      await router.push("/");
     } else {
       Message.warning(payload.message);
     }

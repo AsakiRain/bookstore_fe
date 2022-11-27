@@ -2,14 +2,9 @@
   <main id="main">
     <div id="side-bar">
       <div id="side-title">
-        图书分类
+        用户信息
       </div>
-      <div id="cate-bar">
-        <router-link v-for="item in cateLinks" :key="item.title" :to="item.path" class="nav-link block-link">
-          {{ item.title }}
-        </router-link>
-      </div>
-      <router-link id="clear-link" to="/" class="nav-link block-link">全部</router-link>
+
     </div>
     <div id="content"></div>
   </main>
