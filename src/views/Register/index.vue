@@ -7,7 +7,7 @@
           <a-form
             id="register-form"
             :model="registerForm"
-            @submit="handleRegsiter"
+            @submit="handleRegister"
           >
             <a-form-item
               field="username"
@@ -27,7 +27,7 @@
                 placeholder="请输入用户名"
               >
                 <template #prefix>
-                  <icon-user />
+                  <icon-user/>
                 </template>
               </a-input>
             </a-form-item>
@@ -46,7 +46,7 @@
             >
               <a-input v-model="registerForm.nickname" placeholder="请输入昵称">
                 <template #prefix>
-                  <icon-at />
+                  <icon-at/>
                 </template>
               </a-input>
             </a-form-item>
@@ -70,7 +70,7 @@
                 allow-clear
               >
                 <template #prefix>
-                  <icon-lock />
+                  <icon-lock/>
                 </template>
               </a-input>
             </a-form-item>
@@ -83,9 +83,7 @@
             </a-form-item>
             <div id="button-wrapper">
               <a-button type="primary" long html-type="submit">注册</a-button>
-              <a-button type="outline" long @click="goLogin"
-                >已有账号？登录</a-button
-              >
+              <a-button type="outline" long @click="$router.push('/login')">登录</a-button>
             </div>
           </a-form>
         </div>
@@ -95,92 +93,89 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from "vue";
-import { IconUser, IconLock, IconAt } from "@arco-design/web-vue/es/icon";
-import { useRouter } from "vue-router";
-import { Message, ValidatedError } from "@arco-design/web-vue";
-import type { RegisterForm } from "@/models/auth";
+  import { reactive } from 'vue';
+  import { IconUser, IconLock, IconAt } from '@arco-design/web-vue/es/icon';
+  import { useRouter } from 'vue-router';
+  import { Message, ValidatedError } from '@arco-design/web-vue';
+  import type { RegisterForm } from '@/models/auth';
+  import useUserStore from '@/store/user';
+  import sleep from '@/utils/sleep';
 
-const router = useRouter();
-const registerForm = reactive<RegisterForm>({
-  username: "rainchen",
-  nickname: "rainchen",
-  password: "ssr129631",
-  sex: "男",
-});
+  const router = useRouter();
+  const userStore = useUserStore();
+  const registerForm = reactive<RegisterForm>({
+    username: 'rainchen',
+    nickname: 'rainchen',
+    password: 'ssr129631',
+    sex: '男'
+  });
 
-const handleRegsiter = async ({values, errors} : {values: RegisterForm, errors: Record<string, ValidatedError> }) => {
-  if(errors) return;
-  console.log(values);
-  try {
-    const resp = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const payload = await resp.json();
-    if (payload.code === 20000) {
-      Message.success("注册成功");
-      router.push("/login");
-    } else {
-      Message.warning(payload.message);
+  const handleRegister = async ({
+                                  values,
+                                  errors
+                                }: { values: RegisterForm, errors: Record<string, ValidatedError> }) => {
+    if (errors) return;
+    console.log(values);
+    if (await userStore.register(values)) {
+      Message.success('注册成功');
+      await sleep(500);
+      await router.push('/');
     }
-  } catch (err: any) {
-    console.log(err);
-    Message.error(err.message);
-  }
-};
-const goLogin = () => {
-  router.push("/login");
-};
+  };
 </script>
 <style lang="css">
-#card-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-#card {
-  background-color: #ffffff;
-  border-radius: 12px;
-}
-#card-content {
-  display: flex;
-}
-#card-left,
-#card-right {
-  height: 500px;
-}
-#card-left {
-  width: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 36px;
-  justify-content: center;
-}
-#card-right {
-  width: 340px;
-  background-image: url("/img/card-right.jpeg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 0 12px 12px 0;
-}
-#register-title {
-  text-align: center;
-  font-size: 36px;
-  margin-bottom: 36px;
-}
-#register-form {
-  width: 100%;
-}
-#button-wrapper {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 12px;
-}
+  #card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  #card {
+    background-color: #ffffff;
+    border-radius: 12px;
+  }
+
+  #card-content {
+    display: flex;
+  }
+
+  #card-left,
+  #card-right {
+    height: 500px;
+  }
+
+  #card-left {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px;
+    justify-content: center;
+  }
+
+  #card-right {
+    width: 340px;
+    background-image: url("/img/card-right.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 0 12px 12px 0;
+  }
+
+  #register-title {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 36px;
+  }
+
+  #register-form {
+    width: 100%;
+  }
+
+  #button-wrapper {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+  }
 </style>
