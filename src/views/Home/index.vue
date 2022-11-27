@@ -45,7 +45,7 @@
     }
   ]);
 </script>
-<style lang="css">
+<style lang="css" scoped>
   #main {
     align-self: center;
     width: 1200px;
@@ -68,8 +68,6 @@
     text-align: center;
     padding: 16px;
     border-bottom: 1px solid #E0E0E0;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
   }
 
   #content {

@@ -205,10 +205,11 @@
     if (errors) return;
     if (await userStore.updatePassword(values)) {
       Message.success('修改成功');
+      await userStore.info();
     }
   };
 </script>
-<style lang="css">
+<style lang="css" scoped>
   #main {
     align-self: center;
     width: 1200px;
