@@ -25,10 +25,12 @@
       </div>
     </div>
   </header>
+  <!--  <div id="wrapper">-->
   <router-view></router-view>
   <footer id="footer">
     AsakiRain | 2022
   </footer>
+  <!--  </div>-->
 </template>
 
 <script lang="ts" setup>
@@ -78,6 +80,11 @@
 
 <style lang="css">
   #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
     display: flex;
     justify-content: center;
     background-color: #FFFFFF;
@@ -86,7 +93,7 @@
   #header-content {
     height: 64px;
     display: flex;
-    width: 1200px;
+    width: 100%;
     align-items: center;
   }
 
@@ -127,10 +134,6 @@
     font-size: 16px;
   }
 
-  #main {
-    flex-grow: 1;
-  }
-
   #footer {
     text-align: center;
     height: 16px;
@@ -140,6 +143,54 @@
   #bar-username {
     padding: 0 8px;
     cursor: pointer;
+  }
+
+  .main{
+    flex-grow: 1;
+    align-self: center;
+    width: 100%;
+    display: flex;
+    margin-top: 64px;
+  }
+
+  .side-bar {
+    align-self: start;
+    width: 200px;
+    margin: 16px;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    position: sticky;
+    top: 80px;
+    z-index: 1;
+  }
+
+  .side-title {
+    align-self: stretch;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    padding: 16px;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  .content {
+    flex-grow: 1;
+    background-color: #FFFFFF;
+    margin: 16px 16px 16px 0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .content-title {
+    align-self: stretch;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    padding: 16px;
+    border-bottom: 1px solid #E0E0E0;
   }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <main id="main">
-    <div id="side-bar">
-      <div id="side-title">
+  <main class="main">
+    <div class="side-bar">
+      <div class="side-title">
         图书分类
       </div>
       <div id="cate-bar">
@@ -11,7 +11,9 @@
       </div>
       <router-link id="clear-link" to="/" class="nav-link block-link">全部</router-link>
     </div>
-    <div id="content"></div>
+    <div class="content">
+      <div class="content-title">首页</div>
+    </div>
   </main>
 </template>
 <script lang="ts" setup>
@@ -46,37 +48,6 @@
   ]);
 </script>
 <style lang="css" scoped>
-  #main {
-    align-self: center;
-    width: 1200px;
-    display: flex;
-  }
-
-  #side-bar {
-    align-self: start;
-    width: 200px;
-    margin: 12px;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-  }
-
-  #side-title {
-    font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-    padding: 16px;
-    border-bottom: 1px solid #E0E0E0;
-  }
-
-  #content {
-    flex-grow: 1;
-    background-color: #FFFFFF;
-    margin: 12px 0 12px 12px;
-    border-radius: 8px;
-  }
-
   #cate-bar {
     display: flex;
     flex-direction: column;
@@ -95,6 +66,7 @@
     font-size: 16px;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    align-self: stretch;
   }
 
 </style>

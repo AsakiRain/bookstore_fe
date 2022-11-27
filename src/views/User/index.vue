@@ -1,7 +1,7 @@
 <template>
-  <main id="main">
-    <div id="side-bar">
-      <div id="user-title">用户信息</div>
+  <main class="main">
+    <div class="side-bar" id="side-bar">
+      <div class="side-title">用户信息</div>
       <a-avatar id="user-avatar" :size="64">
         <img alt="avatar"
              src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"/>
@@ -14,8 +14,8 @@
       </div>
       <div id="user-created-at">创建于{{ new Date(userStore.created_at).toLocaleDateString() }}</div>
     </div>
-    <div id="content">
-      <div id="user-title">用户信息</div>
+    <div class="content">
+      <div class="content-title">用户信息</div>
       <a-form
         id="userinfo-form"
         :model="userInfoForm"
@@ -210,39 +210,9 @@
   };
 </script>
 <style lang="css" scoped>
-  #main {
-    align-self: center;
-    width: 1200px;
-    display: flex;
-  }
-
-  #side-bar {
-    align-self: start;
-    width: 200px;
-    margin: 12px;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
+  #side-bar{
     align-items: center;
-    border-radius: 8px;
   }
-
-  #content {
-    flex-grow: 1;
-    background-color: #FFFFFF;
-    margin: 12px 0 12px 12px;
-    border-radius: 8px;
-  }
-
-  #user-title {
-    align-self: stretch;
-    font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-    padding: 16px;
-    border-bottom: 1px solid #E0E0E0;
-  }
-
   #user-avatar {
     margin: 16px 0;
   }
@@ -268,12 +238,6 @@
     font-style: italic;
     color: #999999;
     margin-bottom: 24px;
-  }
-
-  #content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
   #userinfo-form {

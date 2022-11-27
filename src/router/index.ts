@@ -19,6 +19,15 @@ const router = createRouter({
           path: 'user',
           name: 'User',
           component: () => import('@/views/User/index.vue')
+        },
+        {
+          path: 'booklist',
+          redirect: '/booklist/1'
+        },
+        {
+          path: 'booklist/:page',
+          name: 'BookList',
+          component: () => import('@/views/BookList/index.vue')
         }
       ]
     },
