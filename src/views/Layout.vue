@@ -15,7 +15,7 @@
                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"/>
         </a-avatar>
         <a-dropdown>
-          <div id="user-title" class="nav-link btn-link">{{ userStore.nickname }}</div>
+          <div id="bar-username" class="nav-link btn-link">{{ userStore.nickname }}</div>
           <template #content>
             <a-doption @click="$router.push('/user')">用户信息</a-doption>
             <a-doption @click="$router.push('/manager')">管理商店</a-doption>
@@ -137,7 +137,7 @@
     line-height: 1;
   }
 
-  #user-title {
+  #bar-username {
     padding: 0 8px;
     cursor: pointer;
   }

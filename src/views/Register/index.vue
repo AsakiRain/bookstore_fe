@@ -74,8 +74,12 @@
                 </template>
               </a-input>
             </a-form-item>
-            <a-form-item field="sex" label="性别">
-              <a-select placeholder="请选择性别" v-model="registerForm.sex">
+            <a-form-item field="sex" label="性别"
+                         :validate-trigger="['blur']"
+                         :rules="[
+                { required: true, message: '请选择性别' },
+              ]">
+              <a-select placeholder="请选择性别" v-model="registerForm.sex" allow-create>
                 <a-option>未指定</a-option>
                 <a-option>男</a-option>
                 <a-option>女</a-option>

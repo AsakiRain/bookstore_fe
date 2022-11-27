@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { LoginForm, RegisterForm } from '@/models/auth';
 import { UserState } from './type';
 import { Message } from '@arco-design/web-vue';
+import type { PasswordForm, UserInfoForm } from '@/models/user';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
@@ -88,6 +89,50 @@ const useUserStore = defineStore('user', {
           return false;
         }
         this.setInfo(payload.data.user_info);
+        return true;
+      } catch (err: any) {
+        console.error(err);
+        Message.error(err.message);
+        return false;
+      }
+    },
+    async update(userInfoForm: UserInfoForm): Promise<boolean> {
+      try {
+        const resp = await fetch('/api/user/info', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token') || ''
+          },
+          body: JSON.stringify(userInfoForm)
+        });
+        const payload = await resp.json();
+        if (payload.code !== 20000) {
+          Message.warning(payload.message);
+          return false;
+        }
+        return true;
+      } catch (err: any) {
+        console.error(err);
+        Message.error(err.message);
+        return false;
+      }
+    },
+    async updatePassword(passwordForm: PasswordForm): Promise<boolean> {
+      try {
+        const resp = await fetch('/api/user/password', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token') || ''
+          },
+          body: JSON.stringify(passwordForm)
+        });
+        const payload = await resp.json();
+        if (payload.code !== 20000) {
+          Message.warning(payload.message);
+          return false;
+        }
         return true;
       } catch (err: any) {
         console.error(err);
