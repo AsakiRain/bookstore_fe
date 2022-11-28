@@ -43,7 +43,7 @@
                   <img class="book-image" :src="'/api/proxy?url='.concat(book.cover)"/>
                 </div>
                 <div class="info-wrapper">
-                  <div class="book-title info-item">{{ book.title }}</div>
+                  <div class="info-title info-item">{{ book.title }}</div>
                   <div class="info-item book-author">{{ book.author }}</div>
                   <div class="info-item book-translator" v-if="book.translator">{{ book.translator }}（译者）</div>
                   <div class="info-item book-publisher">{{ book.publisher }}</div>

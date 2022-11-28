@@ -39,7 +39,7 @@
         <a-pagination :total="total" v-model:current="page" :page-size="20"/>
       </div>
       <a-spin :loading="loading" id="list-wrapper">
-        <a-grid :cols="1" :col-gap="16" :row-gap="16" id="booklist">
+        <a-grid :cols="2" :col-gap="16" :row-gap="16" id="booklist">
           <a-grid-item v-for="book in current" :key="book.isbn">
             <a-card class="book-card" :body-style="{padding: 0}">
               <div class="card-content">
@@ -47,50 +47,34 @@
                   <img :alt="book.title" class="book-image" :src="'/api/proxy?url='.concat(book.cover)"/>
                 </div>
                 <div class="text-wrapper">
-                  <div class="info-split">
-                    <div class="info-left">
-                      <div class="title-item">
-                        <span class="info-title">{{ book.title }}</span>
-                        <span class="info-title-original" v-if="book.original_title">{{ book.original_title }}</span>
-                      </div>
-                      <div class="isbn-item">ISBN：{{ book.isbn }}</div>
+                  <div class="info-wrapper">
+                    <div class="basic-wrapper">
+                      <div class="info-item info-title">{{ book.title }}</div>
+                      <div class="info-item book-isbn">ISBN：{{ book.isbn }}</div>
                       <div class="info-item">
-                        {{
-                          mergeText(makeAuthor(book.author), makeTranslator(book.translator), book.publisher, book.publish_at)
-                        }}
-                      </div>
-                      <div class="info-item">
-                        {{ mergeText(makePage(book.page), book.binding) }}
-                      </div>
-                      <div class="info-item">
-                        {{ mergeText(makeProducer(book.producer), book.series) }}
+                        <span class="book-author">{{ book.author }}</span>
+                        <span class="book-translator" v-if="book.translator"> / {{ book.translator }}[译]</span>
+                        <span class="book-publisher"> / {{ book.publisher }}</span>
                       </div>
                     </div>
-                    <div class="info-right">
-                      <a-button status="warning" @click="()=>showEditor(book.isbn)">
+                    <div class="action-wrapper">
+                      <a-button type="secondary" status="success" size="small" @click="()=>showDetail(book.isbn)">
                         <template #icon>
-                          <icon-edit/>
+                          <icon-info-circle/>
                         </template>
-                        编辑图书信息
+                        详情
                       </a-button>
-                      <a-popconfirm content="确认删除吗？" @ok="()=>delFromList(book.isbn)">
-                        <a-button status="danger">
+                      <a-popconfirm content="确认删除吗？" @ok="()=>delBook(book.isbn)">
+                        <a-button type="secondary" status="danger" size="small">
                           <template #icon>
                             <icon-delete/>
                           </template>
-                          从书单中删除
+                          删除
                         </a-button>
                       </a-popconfirm>
                     </div>
                   </div>
-                  <div class="intro-wrapper">
-                    <div class="intro-item">
-                      {{ book.intro }}
-                    </div>
-                    <div class="expand-item">
-                      <a-button type="primary" @click="()=>expandIntro(book.intro)">阅读全文</a-button>
-                    </div>
-                  </div>
+                  <div class="intro-wrapper">{{ book.intro }}</div>
                 </div>
               </div>
             </a-card>
@@ -102,50 +86,41 @@
       </div>
     </div>
   </main>
-  <a-drawer :width="600" :visible="drawerVis" unmountOnClose :maskClosable="true" :footer="false"
-            @cancel="()=>setDrawerVis(false)">
+  <a-modal v-model:visible="modalVis" ok-text="保存" cancel-text="关闭"
+           :modal-style="{width: 'auto'}"
+           :body-style="{width: 'auto'}">
     <template #title>
-      图书简介-全文
-    </template>
-    <div id="intro-full">
-      {{ intro }}
-    </div>
-  </a-drawer>
-  <a-modal v-model:visible="modalVis" fullscreen>
-    <template #title>
-      编辑图书
+      图书详情
     </template>
     <template #footer>
-      <a-button>
-        <template #icon>
-          <icon-undo/>
-        </template>
-        取消
-      </a-button>
-      <a-popconfirm content="确认删除吗？" @ok="()=>delFromList(single.isbn)">
-        <a-button status="danger">
-          <template #icon>
-            <icon-delete/>
-          </template>
-          从书单中删除
-        </a-button>
-      </a-popconfirm>
-      <a-button type="primary">
-        <template #icon>
-          <icon-save/>
-        </template>
-        保存修改
-      </a-button>
+      <a-button status="danger" type="primary" @click="">从书库删除</a-button>
+      <a-button status="danger" >从书单删除</a-button>
+      <a-button type="primary">编辑</a-button>
+      <a-button>关闭</a-button>
     </template>
-    <div id="editor-content">
-      <a-form v-model="form" id="editor-form">
-        <a-form-item v-for="item in form" :key="item.key" :label="item.label">
-          <a-input v-model="single[item.key]" :disabled="item.disabled"></a-input>
-        </a-form-item>
-        <a-form-item label="图书简介">
-          <a-textarea v-model="single.intro" auto-size></a-textarea>
-        </a-form-item>
-      </a-form>
+    <div id="detail-content">
+      <div id="detail-title">{{ book.title }}</div>
+      <div id="detail-main">
+        <img id="detail-image" :alt="book.title" :src="'/api/proxy?url='.concat(book.cover)"/>
+        <div id="detail-text">
+          <div id="detail-split">
+            <div id="detail-left">
+              <div class="detail-item" v-for="key in filterKeys(book)" :key="key">
+                <span class="detail-label">{{ findAlias(key) }}：</span>
+                <span class="detail-value">{{ book[key] }}</span>
+              </div>
+            </div>
+            <div id="detail-right" v-if="book.rating">
+              <a-rate :default-value="book.rating" allow-half disabled/>
+              <div>
+                <span id="rating-people">{{ book.rating_people }}</span>
+                <span>人评价</span>
+              </div>
+            </div>
+          </div>
+          <div class="detail-item" id="detail-intro">{{ book.intro }}</div>
+        </div>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -158,14 +133,11 @@ import type {Book} from '@/models/book';
 import {
   IconSearch,
   IconDelete,
-  IconEdit,
-  IconSave,
-  IconUndo
+  IconInfoCircle
 } from '@arco-design/web-vue/es/icon';
 import {Message} from '@arco-design/web-vue';
-import {mergeText, makeTranslator, makeAuthor, makeProducer, makePage} from "@/utils/text";
-import castBook from "@/utils/castBook";
-import type {FormItem} from "@/utils/castBook";
+import findAlias from "@/utils/findAlias";
+import filterKeys from "@/utils/filterKeys";
 
 const router = useRouter();
 const route = useRoute();
@@ -174,13 +146,10 @@ const userStore = useUserStore();
 const {v: showSearch, set: setSearch} = useSwitch();    // 是否有搜索条件，用来控制左侧计数
 const {v: loading, set: setLoading} = useSwitch();  // 是否正在请求
 const {v: modalVis, set: setModalVis} = useSwitch();  // 是否显示详情弹窗
-const {v: drawerVis, set: setDrawerVis} = useSwitch();  // 是否显示详情抽屉
 
 const keyword = ref('');          // 搜索关键字
 const current = ref<Book[]>([]);  // 当前页的书，可以是分页也可以是搜索结果
-const single = ref<Book>({});         // 当前选中的书
-const form = ref<FormItem[]>([]);  // 修改信息表单
-const intro = ref<string>('');     // 当前查看的简介
+const book = ref<Book>({});         // 当前选中的书
 const total = ref<number>(0);     // 整个书单有几本书
 const count = ref<number>(0);    // 搜索结果有几本书
 const page = ref<number>(parseInt(route.params.page! as string)); // 当前页码，一定能从路由获取到，不然会被重定向到第一页
@@ -207,7 +176,7 @@ const update = async (newPage: number) => {
 };
 watch(page, async (newPage) => await update(newPage), {immediate: true});
 
-const delFromList = async (isbn: string) => {
+const delBook = async (isbn: string) => {
   try {
     const resp = await fetch(`/api/booklist?isbn=${isbn}`, {
       method: 'DELETE',
@@ -228,15 +197,26 @@ const delFromList = async (isbn: string) => {
     return;
   }
 };
-const expandIntro = (text: string) => {
-  intro.value = text;
-  setDrawerVis(true);
-}
-const showEditor = async (isbn: string) => {
-  single.value = current.value.find((b) => b.isbn === isbn)!;
-  form.value = castBook(single.value);
-  console.log(form.value)
-  setModalVis(true);
+
+const showDetail = async (isbn: string) => {
+  try {
+    const resp = await fetch(`/api/book?isbn=${isbn}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const payload = await resp.json();
+    if (payload.code !== 20000) {
+      Message.error(payload.message);
+      return;
+    }
+    book.value = payload.data.book_info;
+    setModalVis(true);
+  } catch (err: any) {
+    Message.error(err.message);
+    return;
+  }
 };
 </script>
 <style lang="css" scoped>
@@ -287,12 +267,12 @@ const showEditor = async (isbn: string) => {
 
 .card-content {
   display: flex;
-  height: 300px;
+  height: 240px;
   font-size: 10px;
 }
 
 .img-wrapper {
-  width: 220px;
+  width: 180px;
   background-color: #EBF1F5;
   font-size: 0;
   display: flex;
@@ -306,83 +286,117 @@ const showEditor = async (isbn: string) => {
 }
 
 .text-wrapper {
-  flex-grow: 1;
-  background-color: #F6F9FB;
-  padding: 1.6em;
-  overflow: hidden;
-  line-break: anywhere;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  flex-grow: 1;
+  background-color: #F6F9FB;
+  padding: 12px;
+  row-gap: 4px;
+  overflow: hidden;
+  line-break: anywhere;
 }
 
-.info-split {
+.info-wrapper {
   display: flex;
-  margin-bottom: 1em;
+  align-items: start;
+  margin-bottom: 4px;
 }
 
-.info-left {
+.action-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+
+.basic-wrapper {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
 }
 
-.title-item {
-  display: flex;
-  column-gap: 4px;
-  align-items: end;
-}
 
 .info-title {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.book-isbn {
+  font-size: 1.2em;
+  color: #AAAAAA;
+  margin-bottom: 4px;
+}
+
+.book-author, .book-translator, .book-publisher {
+  font-size: 1.4em;
+}
+
+.intro-wrapper {
+  flex: 1;
+  overflow: hidden;
+  font-size: 1.2em;
+  line-height: 1.4em;
+}
+
+#detail-content {
+  font-size: 10px;
+  width: max-content;
+}
+
+#detail-title {
   font-size: 2.4em;
   font-weight: bold;
 }
 
-.info-title-original {
-  font-size: 1.8em;
-  color: #AAAAAA;
-}
-
-.isbn-item {
-  font-size: 1.4em;
-  color: #AAAAAA;
-  margin-bottom: 1.2em;
-}
-
-.info-item {
-  margin-top: 4px;
-  font-size: 1.6em;
-
-}
-
-.info-right {
+#detail-main {
   display: flex;
-  column-gap: 4px;
-}
-
-.intro-wrapper {
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  overflow: hidden;
-}
-
-.intro-item {
-  font-size: 1.6em;
-  line-height: 1.4em;
-  overflow: hidden;
-  flex: 1;
-}
-
-#intro-full {
-  font-size: 20px;
-}
-
-#editor-content {
-  display: flex;
-  flex-direction: column;
+  margin-top: 8px;
+  column-gap: 24px;
   align-items: center;
 }
 
-#editor-form {
-  width: 1200px;
+.detail-label {
+  color: #666666;
+}
+
+#detail-text {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  justify-content: center;
+}
+
+.detail-item {
+  font-size: 1.3em;
+}
+
+.detail-value {
+  color: #111111;
+}
+
+#detail-intro {
+  min-width: 600px;
+  max-width: 700px;
+}
+
+#detail-image {
+  min-width: 200px;
+}
+
+#detail-split {
+  display: flex;
+}
+
+#detail-left {
+  flex-grow: 1;
+}
+
+#detail-right {
+  font-size: 1.6em;
+  color: #666666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
