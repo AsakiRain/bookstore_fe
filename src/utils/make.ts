@@ -25,3 +25,7 @@ export const makePage = (page: string) => {
     if (page) return `${page}页`;
     return undefined;
 }
+
+export const makeProxy = (url: string) => {
+    return `/api/proxy?url=${encodeURIComponent(url)}`;
+}

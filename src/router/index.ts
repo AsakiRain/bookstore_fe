@@ -40,6 +40,15 @@ const router = createRouter({
             title: '我的书单',
             expand: true,
           }
+        },
+        {
+          path: 'booklist/search/:keyword',
+          name: 'BookListSearch',
+          component: () => import('@/views/BookList/index.vue'),
+          meta: {
+            title: '我的书单',
+            expand: true,
+          }
         }
       ]
     },

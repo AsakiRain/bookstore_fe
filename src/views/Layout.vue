@@ -63,15 +63,15 @@
     },
     {
       title: '我的购物车',
-      path: '/cart'
+      path: '/'
     },
     {
       title: '我的订单',
-      path: '/orders'
+      path: '/'
     },
     {
       title: '管理商店',
-      path: '/manage'
+      path: '/'
     }
   ]);
 </script>
