@@ -1,9 +1,9 @@
 <template>
-  <div id="card-wrapper">
-    <div id="card">
-      <div id="card-content">
-        <div id="card-left">
-          <div id="register-title">注册</div>
+  <div id="card-wrapper" class="flex justify-center items-center h-screen">
+    <div id="card" class="bg-white rounded-xl">
+      <div id="card-content" class="flex h-500px">
+        <div id="card-left" class="w-360px flex flex-col items-center p-9 justify-center">
+          <div id="register-title" class="text-center text-4xl mb-9">注册</div>
           <a-form
             id="register-form"
             :model="registerForm"
@@ -85,13 +85,13 @@
                 <a-option>女</a-option>
               </a-select>
             </a-form-item>
-            <div id="button-wrapper">
+            <div id="button-wrapper" class="mt-3 flex flex-col gap-y-3">
               <a-button type="primary" long html-type="submit">注册</a-button>
               <a-button type="outline" long @click="$router.push('/login')">登录</a-button>
             </div>
           </a-form>
         </div>
-        <div id="card-right"></div>
+        <div id="card-right" class="w-340px bg-cover bg-no-repeat rounded-r-xl bg-[url(/img/card-right.jpeg)]"></div>
       </div>
     </div>
   </div>
@@ -128,58 +128,4 @@
   };
 </script>
 <style lang="css">
-  #card-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  #card {
-    background-color: #ffffff;
-    border-radius: 12px;
-  }
-
-  #card-content {
-    display: flex;
-  }
-
-  #card-left,
-  #card-right {
-    height: 500px;
-  }
-
-  #card-left {
-    width: 360px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 36px;
-    justify-content: center;
-  }
-
-  #card-right {
-    width: 340px;
-    background-image: url("/img/card-right.jpeg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 0 12px 12px 0;
-  }
-
-  #register-title {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 36px;
-  }
-
-  #register-form {
-    width: 100%;
-  }
-
-  #button-wrapper {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 12px;
-  }
 </style>
