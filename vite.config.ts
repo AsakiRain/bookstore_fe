@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080/bookstore4",
+        target: "http://localhost:8080/bookstore",
         changeOrigin: true,
       },
     },
