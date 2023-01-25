@@ -1,23 +1,18 @@
 <template>
-  <header id="header">
+  <header
+    id="header"
+    class="fixed top-0 left-0 right-0 z-2 flex justify-center bg-white"
+  >
     <div
       id="header-content"
       :style="{ width: $route.meta.expand ? '100%' : '1200px' }"
+      class="my-0 mx-24 h-16 flex items-center"
     >
-      <div id="main-title">BOOKSTORE</div>
-      <div id="nav-bar">
-        <router-link to="/" class="nav-link btn-link"> 首页 </router-link>
-        <router-link to="/user" class="nav-link btn-link">
-          个人信息
-        </router-link>
-        <router-link to="/cart" class="nav-link btn-link">
-          我的购物车
-        </router-link>
-        <router-link to="/order" class="nav-link btn-link">
-          我的订单
-        </router-link>
+      <div id="main-title" class="text-xl font-bold cursor-pointer">
+        BOOKSTORE
       </div>
-      <div id="user-bar">
+      <div id="nav-bar" class="grow flex text-base my-0 mx-4"></div>
+      <div id="user-bar" class="flex items-center text-base">
         <a-avatar>
           <img
             alt="avatar"
@@ -25,7 +20,10 @@
           />
         </a-avatar>
         <a-dropdown>
-          <div id="bar-username" class="nav-link btn-link">
+          <div
+            id="bar-username"
+            class="py-0 px-2 cursor-pointer nav-link btn-link"
+          >
             {{ userStore.nickname }}
           </div>
           <template #content>
@@ -37,11 +35,17 @@
       </div>
     </div>
   </header>
-  <main id="main" :style="{ width: $route.meta.expand ? '100%' : '1200px' }">
+  <main
+    id="main"
+    :style="{ width: $route.meta.expand ? '100%' : '1200px' }"
+    class="flex mt-20 grow self-center gap-x-4"
+  >
     <Menu />
     <router-view></router-view>
   </main>
-  <footer id="footer">AsakiRain | 2022</footer>
+  <footer id="footer" class="text-center text-gray-400">
+    AsakiRain | 2022
+  </footer>
 </template>
 
 <script lang="ts" setup>
@@ -67,127 +71,12 @@ const logout = async () => {
 </script>
 
 <style lang="css">
-#header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  background-color: var(--backgroud-color);
-}
-
-#header-content {
-  margin: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-}
-
-#main-title {
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#nav-bar {
-  text-decoration: none;
-  flex-grow: 1;
-  display: flex;
-  font-size: 16px;
-  margin: 0 16px 0 16px;
-}
-
-.nav-link {
-  padding: 0 16px;
-  text-decoration: none;
-  color: var(--text-color);
-  transition: 0.28s background-color cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-link {
-  height: 36px;
-  line-height: 36px;
-  border-radius: 4px;
-}
-
-.nav-link:hover {
-  background-color: var(--hover-backgroud-color);
-  color: var(--a-hover-color);
-}
-
-#user-bar {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-}
-
-#footer {
-  text-align: center;
-  color: var(--footer-color);
-}
-
-#bar-username {
-  padding: 0 8px;
-  cursor: pointer;
-}
-
-#main {
-  flex-grow: 1;
-  align-self: center;
-  display: flex;
-  margin-top: 64px;
-}
-
 .content {
-  flex-grow: 1;
-  background-color: var(--backgroud-color);
-  margin: 16px 16px 0 16px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  --at-apply: grow bg-white rounded-lg flex flex-col items-center;
 }
 
 .content-title {
-  align-self: stretch;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  padding: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-@media (max-width: 1200px) {
-  #header-content {
-    width: 100vw;
-  }
-
-  .main {
-    width: 100% !important;
-  }
-
-  .content {
-    margin: 0;
-    border-radius: 0;
-    border-top: 1px solid var(--border-color);
-  }
-
-  #footer {
-    border-top: 1px solid var(--border-color);
-    background-color: var(--backgroud-color);
-  }
-
-  .content-title {
-    display: none;
-  }
-
-  #route-title {
-    display: inline;
-    font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-  }
+  --at-apply: self-stretch font-bold text-base text-center p-4 border-b
+    border-b-solid border-b-gray-300;
 }
 </style>
