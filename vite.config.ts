@@ -1,7 +1,8 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-
+import UnoCSS from "unocss/vite";
+import presetWind from "@unocss/preset-wind";
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -12,7 +13,19 @@ export default defineConfig({
       },
     },
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    UnoCSS({
+      presets: [presetWind()],
+      shortcuts: {
+        "nav-link":
+          "text-black no-underline transition-colors hover:bg-gray-200 hover:text-blue-800",
+        "inline-link": "py-0 px-4",
+        "btn-link": "h-9 leading-9 rounded",
+        "block-link": "px-4 py-3",
+      },
+    }),
+  ],
   resolve: {
     alias: [
       {
