@@ -1,22 +1,23 @@
-import { defineStore } from 'pinia';
-import type { LoginForm, RegisterForm } from '@/models/auth';
-import { UserState } from './type';
-import { Message } from '@arco-design/web-vue';
-import type { PasswordForm, UserInfoForm } from '@/models/user';
+import { defineStore } from "pinia";
+import type { LoginForm, RegisterForm } from "@/models/auth";
+import { Message } from "@arco-design/web-vue";
+import type { PasswordForm, UserInfoForm, UserState } from "@/models/user";
 
-const useUserStore = defineStore('user', {
+const useUserStore = defineStore("user", {
   state: (): UserState => ({
     username: undefined,
     nickname: undefined,
     sex: undefined,
+    role: undefined,
+    balance: undefined,
     created_at: undefined,
-    updated_at: undefined
+    updated_at: undefined,
   }),
 
   getters: {
     userInfo(state: UserState): UserState {
       return { ...state };
-    }
+    },
   },
   actions: {
     setInfo(partial: Partial<UserState>) {
@@ -27,12 +28,12 @@ const useUserStore = defineStore('user', {
     },
     async login(loginForm: LoginForm): Promise<boolean> {
       try {
-        const resp = await fetch('/api/login', {
-          method: 'POST',
+        const resp = await fetch("/api/login", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(loginForm)
+          body: JSON.stringify(loginForm),
         });
         const payload = await resp.json();
 
@@ -41,7 +42,7 @@ const useUserStore = defineStore('user', {
           return false;
         }
 
-        localStorage.setItem('token', payload.data.token);
+        localStorage.setItem("token", payload.data.token);
         return true;
       } catch (err: any) {
         console.error(err);
@@ -50,23 +51,23 @@ const useUserStore = defineStore('user', {
       }
     },
     logout() {
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     },
     async register(registerForm: RegisterForm): Promise<boolean> {
       try {
-        const resp = await fetch('/api/register', {
-          method: 'POST',
+        const resp = await fetch("/api/register", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(registerForm)
+          body: JSON.stringify(registerForm),
         });
         const payload = await resp.json();
         if (payload.code !== 20000) {
           Message.warning(payload.message);
           return false;
         }
-        localStorage.setItem('token', payload.data.token);
+        localStorage.setItem("token", payload.data.token);
         return true;
       } catch (err: any) {
         console.error(err);
@@ -76,12 +77,12 @@ const useUserStore = defineStore('user', {
     },
     async info(): Promise<boolean> {
       try {
-        const resp = await fetch('/api/user/info', {
-          method: 'GET',
+        const resp = await fetch("/api/user/info", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token') || ''
-          }
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          },
         });
         const payload = await resp.json();
         if (payload.code !== 20000) {
@@ -98,13 +99,13 @@ const useUserStore = defineStore('user', {
     },
     async update(userInfoForm: UserInfoForm): Promise<boolean> {
       try {
-        const resp = await fetch('/api/user/info', {
-          method: 'PUT',
+        const resp = await fetch("/api/user/info", {
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token') || ''
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
           },
-          body: JSON.stringify(userInfoForm)
+          body: JSON.stringify(userInfoForm),
         });
         const payload = await resp.json();
         if (payload.code !== 20000) {
@@ -120,13 +121,13 @@ const useUserStore = defineStore('user', {
     },
     async updatePassword(passwordForm: PasswordForm): Promise<boolean> {
       try {
-        const resp = await fetch('/api/user/password', {
-          method: 'PUT',
+        const resp = await fetch("/api/user/password", {
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token') || ''
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
           },
-          body: JSON.stringify(passwordForm)
+          body: JSON.stringify(passwordForm),
         });
         const payload = await resp.json();
         if (payload.code !== 20000) {
@@ -139,7 +140,7 @@ const useUserStore = defineStore('user', {
         Message.error(err.message);
         return false;
       }
-    }
-  }
+    },
+  },
 });
 export default useUserStore;
