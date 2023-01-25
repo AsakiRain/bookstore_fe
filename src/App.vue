@@ -3,45 +3,19 @@
 </template>
 <script setup lang="ts"></script>
 <style>
-html {
-  --backgroud-color: #ffffff;
-  --text-color: #262626;
-  --sub-text-color: #ababab;
-  --a-text-color: #458bff;
-  --a-hover-color: #40a9ff;
-  --hover-backgroud-color: #eeeeee;
-  --border-color: #e0e0e0;
-  --backgroud-image: url("/img/back-light.png");
-  --footer-color: #bfbfbf;
-}
-
 * {
-  box-sizing: border-box;
-  font-family: Roboto, sans-serif;
+  --at-apply: box-border font-[Roboto];
 }
-
 body {
-  height: 100vh;
+  --at-apply: h-screen m-0;
 }
 
 #app {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  min-height: 100vh;
+  --at-apply: flex flex-col min-h-screen;
 }
 
 #app::before {
-  content: "";
-  position: fixed;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background-image: url("/img/back.jpeg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  filter: blur(6px);
-  z-index: -1;
+  --at-apply: content-none fixed -inset-2.5 bg-[url(/img/back.jpeg)] bg-cover bg-no-repeat
+    blur-6px -z-1;
 }
 </style>

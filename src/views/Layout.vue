@@ -6,7 +6,7 @@
     <div
       id="header-content"
       :style="{ width: $route.meta.expand ? '100%' : '1200px' }"
-      class="my-0 mx-24 h-16 flex items-center"
+      class="h-16 flex items-center"
     >
       <div id="main-title" class="text-xl font-bold cursor-pointer">
         BOOKSTORE
@@ -43,7 +43,7 @@
     <Menu />
     <router-view></router-view>
   </main>
-  <footer id="footer" class="text-center text-gray-400">
+  <footer id="footer" class="text-center text-gray-600 text-sm">
     AsakiRain | 2022
   </footer>
 </template>

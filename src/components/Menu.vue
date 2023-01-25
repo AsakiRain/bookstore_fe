@@ -1,7 +1,7 @@
 <template>
   <div
     id="menu"
-    class="self-start w-50 bg-white flex flex-col rounded-lg sticky top-20 z-1 shrink-0 overflow-hidden"
+    class="self-start w-50 bg-white flex flex-col rounded-lg sticky z-1 shrink-0 overflow-hidden"
   >
     <div
       id="menu-title"
